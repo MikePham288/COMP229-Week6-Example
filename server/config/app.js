@@ -8,9 +8,16 @@ let logger = require('morgan');
 //modules for authentication
 let session = require('express-session');
 let passport = require('passport');
+
+//authentication strategy
 let passportLocal = require('passport-local');
 let localStrategy = passportLocal.Strategy;
+
+//authentication messaging
 let flash = require('connect-flash');
+
+// user model
+let user = require('../models/user');
 
 
 // database setup
@@ -65,6 +72,9 @@ app.use(passport.session());
 //create a User Model Instance
 let userModel = require('../models/user');
 let User = userModel.User;
+
+//implement a User Authentication Strategy
+passport.use(User.createStrategy());
 
 //serialize and deserialize the User Info
 passport.serializeUser(User.serializeUser());
