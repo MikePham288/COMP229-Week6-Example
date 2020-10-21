@@ -20,8 +20,9 @@ let flash = require('connect-flash');
 let user = require('../models/user');
 
 let indexRouter = require('../routes/index');
+let booksRouter = require('../routes/book');
 let usersRouter = require('../routes/users');
-let booksRouter=require('../routes/book');
+
 
 let app = express();
 

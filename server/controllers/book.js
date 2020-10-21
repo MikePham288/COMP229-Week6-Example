@@ -31,7 +31,7 @@ module.exports.displayAddPage =(req, res, next) => {
 }
 
 module.exports.processAddPage = (req, res, next) => {
-    let newBook = Book({
+    let newBook = Book.Model({
         "name": req.body.name,
         "author": req.body.author,
         "published": req.body.published,
@@ -95,7 +95,7 @@ module.exports.processEditPage=(req, res, next) => {
 module.exports.performDelete = (req, res, next) => {
     let id = req.params.id;
 
-    Book.remove({
+    Book.Model.remove({
         _id: id
     }, (err) => {
         if (err) {
