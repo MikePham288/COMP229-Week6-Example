@@ -1,13 +1,15 @@
 let express = require('express');
 let router = express.Router();
-let mongoose = require('mongoose');
 let passport = require('passport');
 
 //create the User Model instance
 let userModel = require('../models/user');
-let User = userModel.User; //Alias
+let User = userModel.Model; //Alias
 
 module.exports.displayHomePage = (req, res, next) => {
+
+    console.log("Home Page Controller");
+
     res.render('index', {
         title: 'Home', displayName: req.user ? req.user.displayName : ''
     });

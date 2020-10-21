@@ -11,6 +11,14 @@
     <h1 class="display-4">Welcome to <%= title %> page</h1>
   
   </div>
+
+        <% if(title == 'Books') { %>
+        <%- include('./book/list') -%> 
+      <% } else if(title == 'Add Book') { %>
+        <%- include('./book/add.ejs') -%> 
+      <% } else if(title == 'Edit Book') { %>
+        <%- include('./book/edit.ejs') -%> 
+      <% } %>
 </main>
 
 

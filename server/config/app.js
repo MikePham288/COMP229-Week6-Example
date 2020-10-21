@@ -19,26 +19,38 @@ let flash = require('connect-flash');
 // user model
 let user = require('../models/user');
 
-
-// database setup
-let mongoose = require('mongoose');
-let DB= require('./db');
-
-//point mongoose to the DB URI
-mongoose.connect(DB.URL, {useNewUrlParser: true, useUnifiedTopology: true } );
-
-let mongoDB=mongoose.connection;
-mongoDB.on('error', console.error.bind(console, 'Connection Error:'));
-mongoDB.once('open', ()=>{
-  console.log('Connected to MongoDB...');
-})
-
-
 let indexRouter = require('../routes/index');
 let usersRouter = require('../routes/users');
 let booksRouter=require('../routes/book');
 
 let app = express();
+
+// database setup
+let mongoose = require('mongoose');
+let DB= require('./db');
+
+//point mongoose to the DB URL
+mongoose.connect(DB.URL, {useNewUrlParser: true, useUnifiedTopology: true });
+let mongoDB = mongoose.connection;
+
+mongoDB.on('error', console.error.bind(console, 'Connection Error:'));
+mongoDB.once('open', () => {
+  console.log('Connected to MongoDB...');
+});
+
+mongoDB.once('connected', ()=>{
+  console.log('MongoDB Connected');
+});
+mongoDB.on('disconnected', ()=>{
+  console.log('MongoDB Disconnected');
+});
+
+mongoDB.on('reconnected', ()=>{
+  console.log('MongoDB Reconnected');
+});
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
@@ -54,7 +66,7 @@ app.use(express.static(path.join(__dirname, '../../node_modules')));
 
 //setup express sessions
 app.use(session({
-  secret: "SomeSecret",
+  secret: DB.Secret,
   saveUninitialized: false,
   resave: false
 }));
@@ -69,9 +81,10 @@ app.use(passport.session());
 
 // passport user configuration
 
+
 //create a User Model Instance
 let userModel = require('../models/user');
-let User = userModel.User;
+let User = user.Model;
 
 //implement a User Authentication Strategy
 passport.use(User.createStrategy());

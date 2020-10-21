@@ -6,13 +6,14 @@ let mongoose = require('mongoose');
 let Book = require('../models/book');
 
 module.exports.displayBookList =  (req, res, next) => {
-    Book.find((err, bookList) => {
+    Book.Model.find((err, bookList) => {
         if (err) {
-            return console.error(err);
+            console.error(err);
+            res.end()
         } else {
             //console.log(BookList);
 
-            res.render('book/list', {
+            res.render('index', {
                 title: 'Books',
                 BookList: bookList,
                 displayName: req.user ? req.user.displayName : ''
@@ -23,9 +24,8 @@ module.exports.displayBookList =  (req, res, next) => {
 }
 
 module.exports.displayAddPage =(req, res, next) => {
-    res.render('book/add', {
+    res.render('index', {
         title: 'Add Book',
-        displayName: req.user ? req.user.displayName : ''
     });
 
 }
@@ -40,7 +40,7 @@ module.exports.processAddPage = (req, res, next) => {
 
     });
 
-    Book.create(newBook, (err, Book) => {
+    Book.Model.create(newBook, (err, Book) => {
         if (err) {
             console.log(err);
             res.end(err);
@@ -53,13 +53,13 @@ module.exports.processAddPage = (req, res, next) => {
 module.exports.displayEditPage=(req, res, next) => {
     let id = req.params.id;
 
-    Book.findById(id, (err, bookToEdit) => {
+    Book.Model.findById(id, (err, bookToEdit) => {
         if (err) {
             console.log(err);
             res.end(err);
         } else {
             //show the edit view
-            res.render('book/edit', {
+            res.render('index', {
                 title: 'Edit Book',
                 book: bookToEdit,
                 displayName: req.user ? req.user.displayName : ''
@@ -68,8 +68,9 @@ module.exports.displayEditPage=(req, res, next) => {
     });
 }
 module.exports.processEditPage=(req, res, next) => {
-    let id = req.params.id
-    let updatedBook = Book({
+    let id = req.params.id;
+
+    let updatedBook = Book.Model({
         "_id": id,
         "name": req.body.name,
         "author": req.body.author,
@@ -78,11 +79,12 @@ module.exports.processEditPage=(req, res, next) => {
         "price": req.body.price
     });
 
-    Book.updateOne({
+    Book.Model.updateOne({
         _id: id
     }, updatedBook, (err) => {
         if (err) {
             console.log(err);
+            res.end(err);
         } else {
             //refresh the book list
             res.redirect('/book-list');
