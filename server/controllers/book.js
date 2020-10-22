@@ -2,6 +2,8 @@ let express = require("express");
 let router = express.Router();
 let mongoose = require("mongoose");
 
+let mysort = { name: 1 };
+
 let jwt = require("jsonwebtoken");
 
 // create a reference to the model
@@ -21,7 +23,7 @@ module.exports.displayBookList = (req, res, next) => {
         displayName: req.user ? req.user.displayName : "",
       });
     }
-  });
+  }).sort({ name: 1 });
 };
 
 module.exports.displayAddPage = (req, res, next) => {
